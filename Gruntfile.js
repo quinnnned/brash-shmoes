@@ -82,29 +82,29 @@ module.exports = function (grunt) {
       gruntfile: {
         files: ['Gruntfile.js']
       },
-      livereload: {
-        files: [
-          '{.tmp,<%= yeoman.client %>}/{app,components}/**/*.css',
-          '{.tmp,<%= yeoman.client %>}/{app,components}/**/*.html',
+      // livereload: {
+      //   files: [
+      //     '{.tmp,<%= yeoman.client %>}/{app,components}/**/*.css',
+      //     '{.tmp,<%= yeoman.client %>}/{app,components}/**/*.html',
           
-          '{.tmp,<%= yeoman.client %>}/{app,components}/**/*.js',
+      //     '{.tmp,<%= yeoman.client %>}/{app,components}/**/*.js',
           
-          '!{.tmp,<%= yeoman.client %>}{app,components}/**/*.spec.js',
-          '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.mock.js',
-          '<%= yeoman.client %>/assets/images/{,*//*}*.{png,jpg,jpeg,gif,webp,svg}'
-        ],
-        options: {
-          livereload: true
-        }
-      },
+      //     '!{.tmp,<%= yeoman.client %>}{app,components}/**/*.spec.js',
+      //     '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.mock.js',
+      //     '<%= yeoman.client %>/assets/images/{,*//*}*.{png,jpg,jpeg,gif,webp,svg}'
+      //   ],
+      //   options: {
+      //     livereload: false
+      //   }
+      // },
       express: {
         files: [
           'server/**/*.{js,json}'
         ],
         tasks: ['express:dev', 'wait'],
         options: {
-          livereload: true,
-          nospawn: true //Without this option specified express won't be reloaded
+          // livereload: true,
+          //nospawn: true //Without this option specified express won't be reloaded
         }
       }
     },
@@ -501,16 +501,16 @@ module.exports = function (grunt) {
   });
 
   // Used for delaying livereload until after server has restarted
-  grunt.registerTask('wait', function () {
-    grunt.log.ok('Waiting for server reload...');
+  // grunt.registerTask('wait', function () {
+  //   grunt.log.ok('Waiting for server reload...');
 
-    var done = this.async();
+  //   var done = this.async();
 
-    setTimeout(function () {
-      grunt.log.writeln('Done waiting!');
-      done();
-    }, 1500);
-  });
+  //   setTimeout(function () {
+  //     grunt.log.writeln('Done waiting!');
+  //     done();
+  //   }, 1500);
+  // });
 
   grunt.registerTask('express-keepalive', 'Keep grunt running', function() {
     this.async();
@@ -519,7 +519,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
-      return grunt.task.run(['build', 'env:all', 'env:prod', 'express:prod', 'wait', 'open', 'express-keepalive']);
+      //return grunt.task.run(['build', 'env:all', 'env:prod', 'express:prod', 'wait', 'open', 'express-keepalive']);
+      return grunt.task.run(['build', 'env:all', 'env:prod', 'express:prod', 'express-keepalive']);
     }
 
     if (target === 'debug') {
@@ -542,8 +543,8 @@ module.exports = function (grunt) {
       'wiredep',
       'autoprefixer',
       'express:dev',
-      'wait',
-      'open',
+      //'wait',
+      //'open',
       'watch'
     ]);
   });

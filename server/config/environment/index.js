@@ -44,9 +44,13 @@ var all = {
     }
   },
 
+  igdb: {
+    apiKey: 'zG9-pfR6SswlCw6m0T63B9tW9KvV4X91CKig_Jgu3lQ'
+  },
+
   facebook: {
-    clientID:     process.env.FACEBOOK_ID || 'id',
-    clientSecret: process.env.FACEBOOK_SECRET || 'secret',
+    clientID:     process.env.FACEBOOK_ID || '475809532592647', //'id',
+    clientSecret: process.env.FACEBOOK_SECRET || 'eb92773e76df29e31f23e563a767cc59', //'secret',
     callbackURL:  (process.env.DOMAIN || '') + '/auth/facebook/callback'
   },
 

@@ -37,3 +37,22 @@
     color: #000;
     padding: 0.2em 0;
 }
+
+.panel {
+    color: #222;
+    text-shadow: none;
+}
+
+.btn-facebook {
+  color: #fff;
+  background-color: #3B5998;
+  border-color: #133783;
+}
+
+.table > tbody > tr > td {
+     vertical-align: middle;
+}
+
+/*.choice-positive { color: #040; }*/
+/*.choice-neutral { color: #444; }*/
+/*.choice-negative { color: #400; }*/

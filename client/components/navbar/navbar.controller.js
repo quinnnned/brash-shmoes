@@ -3,12 +3,18 @@
 angular.module('brashShmoesApp')
   .controller('NavbarCtrl', function ($scope, $location, Auth) {
     $scope.menu = [{
-      'title': 'Home',
-      'link': '/'
-    }];
+      'title': 'Games',
+      'link': '/games'
+    }
+    // ,{'title': 'Food','link': '/food'}
+    ];
 
     $scope.isCollapsed = true;
     $scope.isLoggedIn = Auth.isLoggedIn;
+    if (!$scope.isLoggedIn) {
+      $location.path('/login');
+    }
+    
     $scope.isAdmin = Auth.isAdmin;
     $scope.getCurrentUser = Auth.getCurrentUser;
 

@@ -1,0 +1,85 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+<!--<div ng-init="friends = [-->
+<!--  {name:'John', age:25, gender:'boy'},-->
+<!--  {name:'Jessie', age:30, gender:'girl'},-->
+<!--  {name:'Johanna', age:28, gender:'girl'},-->
+<!--  {name:'Joy', age:15, gender:'girl'},-->
+<!--  {name:'Mary', age:28, gender:'girl'},-->
+<!--  {name:'Peter', age:95, gender:'boy'},-->
+<!--  {name:'Sebastian', age:50, gender:'boy'},-->
+<!--  {name:'Erika', age:27, gender:'girl'},-->
+<!--  {name:'Patrick', age:40, gender:'boy'},-->
+<!--  {name:'Samantha', age:60, gender:'girl'}-->
+<!--]">-->
+<!--  I have {{friends.length}} friends. They are:-->
+<!--  <input type="search" ng-model="q" placeholder="filter friends..." aria-label="filter friends" />-->
+<!--  <ul class="example-animate-container">-->
+<!--    <li class="animate-repeat" ng-repeat="friend in friends | filter:q as results">-->
+<!--      [{{$index + 1}}] {{friend.name}} who is {{friend.age}} years old.-->
+<!--    </li>-->
+<!--    <li class="animate-repeat" ng-if="results.length == 0">-->
+<!--      <strong>No results found...</strong>-->
+<!--    </li>-->
+<!--  </ul>-->
+<!--</div>-->
+  
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="row">
+        <h3 class="text-center">Your Suggestions ({{suggestions.length}}/3):</h3>
+         <table class="table">
+          <tr class="animate-repeat" ng-repeat="game in suggestions">
+            <td>{{ game.name }}</td>
+            <td><a ng-show="!disableSuggestions" class="fa fa-times fa-2x close" ng-click="unsuggestGame(game)"></a></td>
+          </tr>
+        </table>
+        
+        <div ng-show="allowMoreSuggestions">
+          <input class="form-control" type="text" typeahead-on-select="onSelect($item, $model, $label)" ng-model="selection" placeholder="Suggest a game!" typeahead="address as address.name for address in getLocation($viewValue)" typeahead-loading="loadingLocations"> <!-- typeahead-template-url="gameSearchResultTemplate.html"> -->
+          <i ng-show="loadingLocations" class="fa fa-cog fa-spin"></i>
+        </div>
+        
+        <div ng-show="showSubmitSuggestions">
+          <a ng-click="submitSuggestions()" class="btn btn-success">Submit Suggestions!</a>
+        </div>
+      </div>
+      
+      <div class="row" ng-show="selectedGame">
+        <hr>
+        <h3 class="text-center">Game details:</h3>
+        <div class="gameTitleHeader">
+          <img class="gameCover" ng-src="{{selectedGame.cover}}">
+          <h4>{{selectedGame.name}}</h4><i class="text-muted" ng-show="selectedGame.alternateName">{{selectedGame.alternateName}}</i>
+        </div>
+        <p></p>
+        <div ng-show="selectedGame.summary">
+          <span ng-bind-html="displayedSummary"></span>
+          <a ng-click="toggleSummary()">{{moreOrLess}}</a>
+        </div>
+        <p></p>
+        <button class       = "btn btn-sm btn-success" 
+                ng-show     = "allowMoreSuggestions"
+                ng-disabled = "disableSuggestion"
+                ng-click    = "suggestGame(selectedGame)">
+          Add to my suggestions
+        </button>
+      </div>
+    </div>
+    <div class="col-md-7 col-md-offset-1">
+      <h3 class="text-center">Your Rankings:</h3>
+      <table class="table">
+        <tr ng-animate="'animate'" ng-repeat="game in games">
+          <td>{{(game.ranked ? ('#'+($index+1)) : '???')}}</td>
+          <td><a ng-show="!$first" class="fa fa-caret-up fa-2x close" ng-click="upVote(game)"></a></td>
+          <td><a ng-show="!$last" class="fa fa-caret-down fa-2x close" ng-click="downVote(game)"></a></td>
+          <td><img ng-src="{{game.cover}}"></td>
+          <td ng-class="{danger:(!game.ranked)}">{{ game.name }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+

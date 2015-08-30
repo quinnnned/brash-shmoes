@@ -8,5 +8,5 @@ module.exports = {
     uri: 'mongodb://brash-shmoes:revlis^14@ds027483.mongolab.com:27483/brash-shmoes'
   },
 
-  seedDB: true
+  //seedDB: true
 };
