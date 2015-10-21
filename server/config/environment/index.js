@@ -52,7 +52,6 @@ var all = {
   facebook: {
     clientID:     process.env.FACEBOOK_ID || '475809532592647', //'id',
     clientSecret: process.env.FACEBOOK_SECRET || 'eb92773e76df29e31f23e563a767cc59', //'secret',
-    callbackURL:  (process.env.DOMAIN || 'https://brash-shmoes-javascriptsandbox.c9.io') + '/auth/facebook/callback'
   },
 
   twitter: {

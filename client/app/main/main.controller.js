@@ -3,6 +3,10 @@
 angular.module('brashShmoesApp')
   .controller('MainCtrl', function ($window, $scope, $http, socket) {
     
+    
+    console.log('hey it changes');
+    
+    
     $scope.games = [];
     $http.get('/api/games/group/').then(function(res) {
       $scope.games = res.data.games;  

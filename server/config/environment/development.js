@@ -7,4 +7,8 @@ module.exports = {
   
 
   //seedDB: true
+  
+  facebook: {
+       callbackURL: 'http://brash-shmoes-javascriptsandbox.c9.io/auth/facebook/callback'  
+  }
 };
