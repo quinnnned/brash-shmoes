@@ -2,18 +2,29 @@
 
 angular
 .module('brashShmoesApp')
-.controller('GamesController', function ($scope, $http, Auth, Game, socket) {
+.controller('GamesController', function ($scope, $http, Game, User, socket) {
   
   var maxSummaryLength = 200;  
   
-  $scope.disableSuggestions = false;
+  var init = function() {
+    $scope.disableSuggestions = true;
+    $scope.allowMoreSuggestions = false;
+    
+    $scope.suggestions = [];
+    User.getSuggestions().$promise.then(function(data){
+      $scope.suggestions = data.suggestions;
+      if (!$scope.suggestions.length) {
+        $scope.disableSuggestions = false;
+        $scope.allowMoreSuggestions = true;
+      }
+    });
+    
+    // Get games
+    $scope.games= [];
+    
+    reloadGames();
+  };
   
-  $scope.suggestions = [];
-  
-  $scope.allowMoreSuggestions = true;
-  
-  // Get games
-  $scope.games= [];
   
   var reloadGames = function() {
     Game.all(function(games){
@@ -22,7 +33,7 @@ angular
     });  
   }
   
-  reloadGames();
+  
   
   $scope.submitSuggestions = function() {
     $scope.disableSuggestions = true;
@@ -34,14 +45,11 @@ angular
     Game.find($model.id, function(game){
       delete $scope.selection;
       game.igdb_id = $model.id;
-      
       $scope.setSelectedGame(game);
     });
   };
   
-  $scope.upVote = function(game) { moveGame(game, -1); };
-  
-  $scope.downVote = function(game) { moveGame(game, +1); };
+
   
   var pushRankings = function() {
     $http.post('/api/games/rank',{
@@ -51,6 +59,11 @@ angular
               .value()
     } ).then(function(res){console.log(res);});
   };
+  
+  
+  $scope.upVote = function(game) { moveGame(game, -1); };
+  
+  $scope.downVote = function(game) { moveGame(game, +1); };
   
   var moveGame = function(game, direction) {
     var i = $scope.games.indexOf(game);
@@ -126,5 +139,7 @@ angular
     $scope.allowMoreSuggestions = $scope.suggestions.length < 3;
     $scope.showSubmitSuggestions = $scope.suggestions.length == 3;
   };
+  
+  init();
 
 });

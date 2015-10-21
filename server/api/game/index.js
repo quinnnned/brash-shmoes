@@ -14,6 +14,7 @@ router.get('/search/:id', auth.isAuthenticated(), controller.detail);
 // User Ranking //
 router.post('/rank', auth.isAuthenticated(), controller.rank);
 
+router.get('/group', auth.isAuthenticated(), controller.getGroupRankings);
 router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', auth.isAuthenticated(), controller.create);

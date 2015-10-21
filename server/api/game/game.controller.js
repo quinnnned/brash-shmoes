@@ -3,7 +3,9 @@
 var _ = require('lodash');
 
 var Game = require('./game.model');
+var User = require('../user/user.model')
 var igdb = require('../../components/igdb/')
+var voting = require('../../components/voting/');
 
 // IGDB // Get a list of games based on a search
 exports.search = function(req, res) {
@@ -13,7 +15,7 @@ exports.search = function(req, res) {
   });
 };
 
-// IGDB // Get a list of games based on a search
+
 exports.detail = function(req, res) {
   igdb.find(req.params.id, function(err, data) {
     var g = data.game;
@@ -22,52 +24,86 @@ exports.detail = function(req, res) {
       name: g.name,
       summary: g.summary,
       alternateName: g.alternative_names && g.alternative_names.length > 0 ? g.alternative_names[0].name : null,
-      cover: g.cover ? g.cover.replace('https://','http://') : '',
-      platforms: _.map(g.release_dates,function(x){return x.platform_name;})
+      cover: g.cover,
+      platforms: g.release_dates.map(function(x){return x.platform_name;})
     });  
   });
 };
 
 // Get list of games
 exports.index = function(req, res) {
-  Game.find().lean().exec(function (err, games) {
-    if(err) { return handleError(res, err); }
-    
-    var rankedGames = [];
+  getAllSuggestedGames(function(err, games) {
+      if (err) return res.status(503).send();
+      res.status(200).json(orderByRanking(games, req.user.rankings));
+  });
+  // User.find().lean().exec(function (err, users){
+  //   if (err) return res.status(503).send();
+  //   var plucked = _.pluck(users,'suggestions');
+  //   var gameIds = _(plucked).flatten().uniq().value();
+  //   igdb.findList(gameIds, function(err, games){
+  //     if (err) return res.status(503).send();
+  //     res.status(200).json(orderByRanking(games, req.user.rankings));
+  //   });
+  // });
+};
+
+var getAllSuggestedGames = function(next) {
+  User.find().lean().exec(function (err, users){
+    if (err) return next(err, null);
+    var plucked = _.pluck(users,'suggestions');
+    var gameIds = _(plucked).flatten().uniq().value();
+    igdb.findList(gameIds, function(err, games){
+      next(err, games)
+    });
+  });
+};
+
+var orderByRanking = function(games, userRankings) {
+  var rankedGames = [];
     var unrankedGames = [];
-    var userRankings = req.user.rankings;
     games.forEach(function(game){
       game.rank = userRankings.indexOf(game.igdb_id);
       game.ranked = game.rank >= 0;
-      
       if(game.ranked) { 
         rankedGames.push(game);
       } else {
         unrankedGames.push(game);
       }
     });
-    
-    var sortedGames = _(rankedGames)
-                        .sortBy('rank')
-                        .concat(unrankedGames)
-                        .value();
-    
-    return res.status(200).json(sortedGames);
+    return _(rankedGames)
+            .sortBy('rank')
+            .concat(unrankedGames)
+            .value();
+};
+
+var getGroupOrdering = function(next){
+  User.find().lean().exec(function (err, users){
+    if (err) return next(err, null);
+    var userRankings = _.pluck(users,'rankings');
+    console.log(userRankings);
+    next(err,voting.LinearWeighting(userRankings));
+  });
+};
+
+exports.getGroupRankings = function(req, res) {
+  getAllSuggestedGames(function(err, games) {
+    if (err) return res.status(503).send();
+    getGroupOrdering(function(err,order){
+      res.json({
+        games : orderByRanking(games, order)
+      });  
+    });
   });
 };
 
 // User posts rankings
 exports.rank = function(req, res) {
-  console.time('rankpost');
   req.user.rankings = req.body.order;
   req.user.save(function(err){
-    console.timeEnd('rankpost');
     if (err) return handleError(res, err);
-    
     return res.status(200).json({status:'success'});
   });
 };
-
 
 // Get a single game
 exports.show = function(req, res) {
@@ -82,7 +118,6 @@ exports.show = function(req, res) {
 exports.create = function(req, res) {
   var newGame = req.body;
   newGame.user = req.user._id;
-  console.log(newGame);
   Game.create(newGame, function(err, game) {
     if(err) { return handleError(res, err); }
     return res.status(201).json(game);

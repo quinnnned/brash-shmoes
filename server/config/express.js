@@ -34,15 +34,15 @@ module.exports = function(app) {
 
   // Persist sessions with mongoStore
   // We need to enable sessions for passport twitter because its an oauth 1.0 strategy
-  app.use(session({
-    secret: config.secrets.session,
-    resave: true,
-    saveUninitialized: true,
-    store: new mongoStore({
-      mongooseConnection: mongoose.connection,
-      db: 'brash-shmoes'
-    })
-  }));
+  // app.use(session({
+  //   secret: config.secrets.session,
+  //   resave: true,
+  //   saveUninitialized: true,
+  //   store: new mongoStore({
+  //     mongooseConnection: mongoose.connection,
+  //     db: 'brash-shmoes'
+  //   })
+  // }));
   
   if ('production' === env) {
     app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));

@@ -12,9 +12,8 @@ module.exports = {
   port:     process.env.OPENSHIFT_NODEJS_PORT ||
             process.env.PORT ||
             8080,
-
-  // MongoDB connection options
-  mongo: {
-    uri: 'mongodb://brash-shmoes:revlis^14@ds027483.mongolab.com:27483/brash-shmoes'
+            
+  facebook: {
+       callbackURL: 'http://games.brashshmoes.com/auth/facebook/callback'  
   }
 };

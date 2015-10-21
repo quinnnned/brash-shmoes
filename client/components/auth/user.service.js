@@ -17,6 +17,13 @@ angular.module('brashShmoesApp')
         params: {
           id:'me'
         }
+      },
+      getSuggestions: {
+        method: 'GET',
+        params: {
+          id:'me',
+          controller:'suggestions'
+        }
       }
 	  });
   });

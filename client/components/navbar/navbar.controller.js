@@ -3,7 +3,7 @@
 angular.module('brashShmoesApp')
   .controller('NavbarCtrl', function ($scope, $location, Auth) {
     $scope.menu = [{
-      'title': 'Games',
+      'title': 'My Games',
       'link': '/games'
     }
     // ,{'title': 'Food','link': '/food'}

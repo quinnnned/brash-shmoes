@@ -29,7 +29,7 @@
   <div class="row">
     <div class="col-md-4">
       <div class="row">
-        <h3 class="text-center">Your Suggestions ({{suggestions.length}}/3):</h3>
+        <h3 class="text-left">Your Suggestions ({{suggestions.length}}/3):</h3>
          <table class="table">
           <tr class="animate-repeat" ng-repeat="game in suggestions">
             <td>{{ game.name }}</td>
@@ -49,7 +49,7 @@
       
       <div class="row" ng-show="selectedGame">
         <hr>
-        <h3 class="text-center">Game details:</h3>
+        <h3 class="text-left">Game details:</h3>
         <div class="gameTitleHeader">
           <img class="gameCover" ng-src="{{selectedGame.cover}}">
           <h4>{{selectedGame.name}}</h4><i class="text-muted" ng-show="selectedGame.alternateName">{{selectedGame.alternateName}}</i>
@@ -69,17 +69,21 @@
       </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
-      <h3 class="text-center">Your Rankings:</h3>
+      <h3 class="text-left">Your Rankings:</h3>
       <table class="table">
         <tr ng-animate="'animate'" ng-repeat="game in games">
           <td>{{(game.ranked ? ('#'+($index+1)) : '???')}}</td>
           <td><a ng-show="!$first" class="fa fa-caret-up fa-2x close" ng-click="upVote(game)"></a></td>
           <td><a ng-show="!$last" class="fa fa-caret-down fa-2x close" ng-click="downVote(game)"></a></td>
-          <td><img ng-src="{{game.cover}}"></td>
+          <td>
+            <img ng-src="{{game.cover}}"
+                 height="50"
+                 width= "50">
+          </td>
           <td ng-class="{danger:(!game.ranked)}">{{ game.name }}</td>
         </tr>
       </table>
     </div>
   </div>
 </div>
-
+<div ng-include="'components/footer/footer.html'"></div>

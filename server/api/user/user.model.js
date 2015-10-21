@@ -7,7 +7,6 @@ var authTypes = ['github', 'twitter', 'facebook', 'google'];
 
 var UserSchema = new Schema({
   name: String,
-  email: { type: String, lowercase: true },
   role: {
     type: String,
     default: 'user'
@@ -19,14 +18,14 @@ var UserSchema = new Schema({
   twitter: {},
   google: {},
   github: {},
+  suggestions: [ Number ],
   rankings: [ Number ]
 });
 
 /**
  * Virtuals
  */
-UserSchema
-  .virtual('password')
+UserSchema.virtual('password')
   .set(function(password) {
     this._password = password;
     this.salt = this.makeSalt();
@@ -37,8 +36,7 @@ UserSchema
   });
 
 // Public profile information
-UserSchema
-  .virtual('profile')
+UserSchema.virtual('profile')
   .get(function() {
     return {
       'name': this.name,
@@ -47,8 +45,7 @@ UserSchema
   });
 
 // Non-sensitive info we'll be putting in the token
-UserSchema
-  .virtual('token')
+UserSchema.virtual('token')
   .get(function() {
     return {
       '_id': this._id,
@@ -60,14 +57,6 @@ UserSchema
  * Validations
  */
 
-// Validate empty email
-UserSchema
-  .path('email')
-  .validate(function(email) {
-    if (authTypes.indexOf(this.provider) !== -1) return true;
-    return email.length;
-  }, 'Email cannot be blank');
-
 // Validate empty password
 UserSchema
   .path('hashedPassword')
@@ -75,21 +64,6 @@ UserSchema
     if (authTypes.indexOf(this.provider) !== -1) return true;
     return hashedPassword.length;
   }, 'Password cannot be blank');
-
-// Validate email is not taken
-UserSchema
-  .path('email')
-  .validate(function(value, respond) {
-    var self = this;
-    this.constructor.findOne({email: value}, function(err, user) {
-      if(err) throw err;
-      if(user) {
-        if(self.id === user.id) return respond(true);
-        return respond(false);
-      }
-      respond(true);
-    });
-}, 'The specified email address is already in use.');
 
 var validatePresenceOf = function(value) {
   return value && value.length;

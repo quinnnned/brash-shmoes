@@ -37,6 +37,7 @@ var all = {
 
   // MongoDB connection options
   mongo: {
+    uri: 'mongodb://brash-shmoes:revlis^14@ds027483.mongolab.com:27483/brash-shmoes',
     options: {
       db: {
         safe: true
@@ -51,7 +52,7 @@ var all = {
   facebook: {
     clientID:     process.env.FACEBOOK_ID || '475809532592647', //'id',
     clientSecret: process.env.FACEBOOK_SECRET || 'eb92773e76df29e31f23e563a767cc59', //'secret',
-    callbackURL:  (process.env.DOMAIN || '') + '/auth/facebook/callback'
+    callbackURL:  (process.env.DOMAIN || 'https://brash-shmoes-javascriptsandbox.c9.io') + '/auth/facebook/callback'
   },
 
   twitter: {

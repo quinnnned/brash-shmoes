@@ -1,9 +1,13 @@
 'use strict';
 
 var User = require('./user.model');
+var igdb = require('../../components/igdb/')
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
+var _ = require('lodash');
+
+
 
 var validationError = function(res, err) {
   return res.status(422).json(err);
@@ -93,9 +97,63 @@ exports.me = function(req, res, next) {
   });
 };
 
+exports.setMySuggestions = function(req, res, next) {
+  var userId = req.user._id;
+  User.findOne({ _id: userId }, function(err, user) {
+    if (err) return next(err);
+    user.suggestions = req.body.suggestionIds;
+    user.save(function(err) {
+      if (err) return res.status(503).send('Internal Server Error');
+      return res.status(200).send('OK');
+    });
+  });
+};
+
+exports.getMySuggestions = function(req, res) {
+  igdb.findList(req.user.suggestions, function(err,suggestions){
+    if (err) return res.status(503).send(JSON.stringify(err));
+    res.json({
+      suggestions: suggestions
+    });  
+  });
+};
+
+
+exports.getShames = function(req, res) {
+  User.find({}, function(err, users) {
+    
+    var userSuggestions = _.pluck(users,'suggestions');
+    var suggestions = _(userSuggestions).flatten().uniq().value();
+    
+    var shames = [];
+    
+    users.forEach(function(user){
+      user.hasNotSuggestedGames = !user.suggestions.length;
+      
+      user.hasUnrankedGames = _.intersection(user.rankings, suggestions).length 
+                            < suggestions.length;                          
+      
+      if (user.hasNotSuggestedGames) {
+        shames.push({
+          name: user.name,
+          action: 'has not suggested any games.'
+        });  
+      }
+      if (user.hasUnrankedGames) {
+        shames.push({
+          name: user.name,
+          action: 'has not ranked all game suggestions.'
+        });  
+      }
+    });
+    res.json({shames:shames});
+  });
+};
+
+
 /**
  * Authentication callback
  */
-exports.authCallback = function(req, res, next) {
+exports.authCallback = function(req, res) {
   res.redirect('/');
 };
