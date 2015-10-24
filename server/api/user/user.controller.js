@@ -126,27 +126,35 @@ exports.getShames = function(req, res) {
     var suggestions = _(userSuggestions).flatten().uniq().value();
     
     var shames = [];
-    
-    users.forEach(function(user){
+    var fames = []
+    users.forEach(function(user,index){
+      
+      user.hasShame = false;
+      
       user.hasNotSuggestedGames = !user.suggestions.length;
       
       user.hasUnrankedGames = _.intersection(user.rankings, suggestions).length 
                             < suggestions.length;                          
       
       if (user.hasNotSuggestedGames) {
+        user.hasShame = true;
         shames.push({
           name: user.name,
           action: 'has not suggested any games.'
         });  
       }
       if (user.hasUnrankedGames) {
+        user.hasShame = true;
         shames.push({
           name: user.name,
           action: 'has not ranked all game suggestions.'
         });  
       }
+      
+      if (!user.hasShame) fames.push({name:user.name});
+      
     });
-    res.json({shames:shames});
+    res.json({shames:shames, fames:fames});
   });
 };
 

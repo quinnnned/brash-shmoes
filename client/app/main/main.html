@@ -1,29 +1,37 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
-
 <div class="container">
   <div class="row">
-    <div class="col-md-7">
+    <div class="col-md-6">
       <h3 class="text-left">Group Rankings:</h3>
       <table class="table">
+        <tr ng-hide="games.length"><td>LOADING...</td></tr>
         <tr ng-animate="'animate'" ng-repeat="game in games">
-          <td>{{'#'+($index+1)}}</td>
+          <!--<td>{{'#'+($index+1)}}</td>-->
+          <td><strong>{{points[$index] + ' point' + ((points[$index]>1)?'s':'')}} </strong></td>
           <td>
-            <img ng-src="{{game.cover}}"
-                 height="50"
-                 width= "50"
-            >
+            <img ng-src="{{game.cover}}" height="50" width="50">
           </td>
           <td>{{ game.name }}</td>
         </tr>
       </table>
     </div>
-    <div class="col-md-4 col-md-offset-1">
-      <h3 class="text-left">Wall of Shame:</h3>
-      <table class="table">
-        <tr ng-animate="'animate'" ng-repeat="shame in shames">
-          <td><strong>{{ shame.name.split(' ')[0]}}</strong>{{' ' +shame.action }}</td>
-        </tr>
-      </table>
+    <div class="col-md-6">
+      <div ng-show="shames.length>0" class="row">
+        <h3 class="text-left">Wall of Shame:</h3>
+        <table class="table">
+          <tr ng-animate="'animate'" ng-repeat="shame in shames">
+            <td><i class="glyphicon glyphicon-ban-circle"></i>&nbsp;<strong>{{ shame.name.split(' ')[0]}}</strong>{{' ' +shame.action }}</td>
+          </tr>
+        </table>  
+      </div>
+      <div ng-show="fames.length>0" class="row">
+        <h3 class="text-left">Wall of Fame:</h3>
+        <table class="table">
+          <tr ng-repeat="fame in fames">
+            <td><i class="glyphicon glyphicon-ok"></i>&nbsp;<strong>{{ fame.name.split(' ')[0]}}</strong> is awesome.</td>
+          </tr>
+        </table>  
+      </div>
     </div>
   </div>
 </div>

@@ -80,17 +80,18 @@ var getGroupOrdering = function(next){
   User.find().lean().exec(function (err, users){
     if (err) return next(err, null);
     var userRankings = _.pluck(users,'rankings');
-    console.log(userRankings);
-    next(err,voting.LinearWeighting(userRankings));
+    var linear = voting.LinearWeighting(userRankings)
+    next(err, linear.order, linear.points);
   });
 };
 
 exports.getGroupRankings = function(req, res) {
   getAllSuggestedGames(function(err, games) {
     if (err) return res.status(503).send();
-    getGroupOrdering(function(err,order){
+    getGroupOrdering(function(err, order, points) {
       res.json({
-        games : orderByRanking(games, order)
+        games : orderByRanking(games, order),
+        points : points
       });  
     });
   });

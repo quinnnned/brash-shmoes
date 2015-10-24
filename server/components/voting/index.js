@@ -74,9 +74,16 @@ exports.LinearWeighting = function(voterRankings) {
        }); 
     });
     
-    return getOrderByShufflingValues(votes).map(function(x){ 
+    var order = getOrderByShufflingValues(votes).map(function(x){ 
         return invMap[x];
     });
+    
+    var minVote = _.min(votes);
+    var points = votes.map(function(vote){return vote-minVote+1;}).sort(function(a,b){return a-b;}).reverse();
+    
+    console.log({votes:votes, min:minVote, points:points });
+    
+    return {order:order, points:points}
 };
 
 exports.Schulze = function(voterRankings) {

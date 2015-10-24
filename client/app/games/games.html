@@ -71,6 +71,7 @@
     <div class="col-md-7 col-md-offset-1">
       <h3 class="text-left">Your Rankings:</h3>
       <table class="table">
+        <tr ng-hide="games.length"><td>LOADING...</td></tr>
         <tr ng-animate="'animate'" ng-repeat="game in games">
           <td>{{(game.ranked ? ('#'+($index+1)) : '???')}}</td>
           <td><a ng-show="!$first" class="fa fa-caret-up fa-2x close" ng-click="upVote(game)"></a></td>
